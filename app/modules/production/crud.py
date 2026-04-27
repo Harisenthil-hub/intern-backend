@@ -42,7 +42,7 @@ def create_production(db: Session, payload: ProductionCreate) -> Production:
         quantity_display=quantity_display,
         batch=payload.batch,
         linked_tank_id=payload.linked_tank_id,
-        entry_mode=payload.entry_mode,
+        is_posted=payload.is_posted,
     )
     db.add(entry)
     db.commit()
@@ -78,7 +78,7 @@ def get_production_by_tank(db: Session, tank_id: str) -> list[Production]:
 # ── Update ────────────────────────────────────────────────────────────────────
 
 def update_production(db: Session, entry: Production, payload: ProductionUpdate) -> Production:
-    if entry.entry_mode == "post":
+    if entry.is_posted == 1:
         raise ValueError("Cannot edit a posted (locked) production entry.")
 
     update_data = payload.model_dump(exclude_unset=True)
@@ -94,9 +94,9 @@ def update_production(db: Session, entry: Production, payload: ProductionUpdate)
 
 
 def post_production(db: Session, entry: Production) -> Production:
-    if entry.entry_mode == "post":
+    if entry.is_posted == 1:
         raise ValueError("Production entry is already posted.")
-    entry.entry_mode = "post"
+    entry.is_posted = 1
     db.commit()
     db.refresh(entry)
     return entry

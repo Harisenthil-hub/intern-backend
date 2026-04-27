@@ -47,7 +47,7 @@ def create_tank(db: Session, payload: TankCreate) -> Tank:
         max_level=payload.max_level,
         calibration_ref=payload.calibration_ref,
         status=payload.status,
-        entry_mode=payload.entry_mode,
+        is_posted=payload.is_posted,
         current_level=0.0,
     )
     db.add(tank)
@@ -80,7 +80,7 @@ def update_tank(db: Session, tank: Tank, payload: TankUpdate) -> Tank:
 
     Raises ValueError if the tank is already posted (locked).
     """
-    if tank.entry_mode == "post":
+    if tank.is_posted == 1:
         raise ValueError("Cannot edit a posted (locked) tank record.")
 
     update_data = payload.model_dump(exclude_unset=True)
@@ -97,10 +97,10 @@ def update_tank(db: Session, tank: Tank, payload: TankUpdate) -> Tank:
 
 
 def post_tank(db: Session, tank: Tank) -> Tank:
-    """Lock a draft tank by setting entry_mode to 'post'."""
-    if tank.entry_mode == "post":
+    """Lock a draft tank by setting is_posted to 1."""
+    if tank.is_posted == 1:
         raise ValueError("Tank is already posted.")
-    tank.entry_mode = "post"
+    tank.is_posted = 1
     db.commit()
     db.refresh(tank)
     return tank

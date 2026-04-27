@@ -6,15 +6,11 @@ Columns mirror the fields in AddProductionPage.jsx:
   batch, linkedTankId, entryMode
 """
 
-from sqlalchemy import Column, String, Float, Date, ForeignKey, Enum as SAEnum
+from sqlalchemy import Column, String, Float, Date, ForeignKey, Enum as SAEnum, Integer
 import enum
 
 from app.database.database import Base
 
-
-class ProductionEntryMode(str, enum.Enum):
-    draft = "draft"
-    posted = "post"
 
 
 class Production(Base):
@@ -40,8 +36,4 @@ class Production(Base):
     )
 
     # Workflow
-    entry_mode = Column(
-        SAEnum(ProductionEntryMode, values_callable=lambda x: [e.value for e in x]),
-        nullable=False,
-        default=ProductionEntryMode.draft.value,
-    )
+    is_posted = Column(Integer, nullable=False, default=0)

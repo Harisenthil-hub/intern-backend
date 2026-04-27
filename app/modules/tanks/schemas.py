@@ -18,8 +18,6 @@ from pydantic import BaseModel, Field, field_validator
 GAS_TYPES = ["Oxygen", "Nitrogen", "LPG", "CO2", "Argon", "Hydrogen"]
 CAPACITY_UNITS = ["Liters", "Kg", "m³"]
 TANK_STATUSES = ["Active", "Inactive", "Maintenance"]
-ENTRY_MODES = ["draft", "post"]
-
 
 # ── Request schemas ───────────────────────────────────────────────────────────
 
@@ -37,9 +35,9 @@ class TankCreate(BaseModel):
     calibration_ref: Optional[str] = Field(default=None, max_length=80)
 
     status: str = Field(default="Active")
-    entry_mode: Literal["draft", "post"] = Field(
-        default="draft",
-        description="'draft' = editable; 'post' = locked record",
+    is_posted: int = Field(
+        default=0,
+        description="0 = saved; 1 = posted/locked record",
     )
 
     @field_validator("gas_type")
@@ -76,7 +74,7 @@ class TankUpdate(BaseModel):
     max_level: Optional[float] = None
     calibration_ref: Optional[str] = Field(default=None, max_length=80)
     status: Optional[str] = None
-    entry_mode: Optional[Literal["draft", "post"]] = None
+    is_posted: Optional[int] = None
 
 
 # ── Response schema ───────────────────────────────────────────────────────────
@@ -95,7 +93,7 @@ class TankOut(BaseModel):
     max_level: Optional[float]
     calibration_ref: Optional[str]
     status: str
-    entry_mode: str
+    is_posted: int
     current_level: Optional[float]
 
     model_config = {"from_attributes": True}

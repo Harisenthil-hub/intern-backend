@@ -26,7 +26,7 @@ class ProductionCreate(BaseModel):
     quantity_unit: str = Field(default="Liters")
     batch: Optional[str] = Field(default=None, max_length=80)
     linked_tank_id: Optional[str] = Field(default=None, max_length=20, description="FK to tanks.tank_id")
-    entry_mode: Literal["draft", "post"] = Field(default="draft")
+    is_posted: int = Field(default=0)
 
     @field_validator("gas_type")
     @classmethod
@@ -53,7 +53,7 @@ class ProductionUpdate(BaseModel):
     quantity_unit: Optional[str] = None
     batch: Optional[str] = Field(default=None, max_length=80)
     linked_tank_id: Optional[str] = Field(default=None, max_length=20)
-    entry_mode: Optional[Literal["draft", "post"]] = None
+    is_posted: Optional[int] = None
 
 
 # ── Response schema ───────────────────────────────────────────────────────────
@@ -68,6 +68,6 @@ class ProductionOut(BaseModel):
     quantity_display: Optional[str]
     batch: Optional[str]
     linked_tank_id: Optional[str]
-    entry_mode: str
+    is_posted: int
 
     model_config = {"from_attributes": True}

@@ -9,18 +9,32 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.database.database import Base, engine
+from app.database.database import Base, engine, SessionLocal
 
 # ── Import all models so SQLAlchemy registers them before create_all ──────────
 from app.modules.tanks.models import Tank                    # noqa: F401
 from app.modules.production.models import Production         # noqa: F401
 from app.modules.monitoring.models import LevelEntry         # noqa: F401
+from app.modules.lookups.models import Lookup                # noqa: F401
 
 # ── Import routers ────────────────────────────────────────────────────────────
 from app.modules.tanks.router import router as tanks_router
 from app.modules.production.router import router as production_router
 from app.modules.monitoring.router import router as monitoring_router
 from app.modules.dashboard.router import router as dashboard_router
+from app.modules.lookups.router import router as lookups_router
+from app.modules.lookups.crud import seed_lookups_if_empty
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Seed lookups on startup
+    db = SessionLocal()
+    try:
+        seed_lookups_if_empty(db)
+    finally:
+        db.close()
+    yield
 
 # ── Create all tables (dev convenience; use Alembic in production) ────────────
 Base.metadata.create_all(bind=engine)
@@ -35,6 +49,7 @@ app = FastAPI(
     ),
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
@@ -53,6 +68,7 @@ app.include_router(tanks_router,      prefix=API_PREFIX)
 app.include_router(production_router, prefix=API_PREFIX)
 app.include_router(monitoring_router, prefix=API_PREFIX)
 app.include_router(dashboard_router,  prefix=API_PREFIX)
+app.include_router(lookups_router,    prefix=API_PREFIX)
 
 
 # ── Health check ──────────────────────────────────────────────────────────────

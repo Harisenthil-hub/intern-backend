@@ -60,7 +60,7 @@ def get_production_by_tank(tank_id: str, db: Session = Depends(get_db)) -> list[
     summary="Create a production entry",
     description=(
         "Records internally generated gas. "
-        "Use `entry_mode='draft'` to save, `entry_mode='post'` to lock."
+        "Use `is_posted=0` to save, `is_posted=1` to lock."
     ),
 )
 def create_production(payload: ProductionCreate, db: Session = Depends(get_db)) -> ProductionOut:

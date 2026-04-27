@@ -43,14 +43,15 @@ def create_level_entry(db: Session, payload: LevelEntryCreate) -> LevelEntry:
         quantity_issued=payload.quantity_issued,
         closing_level=payload.closing_level,  # already computed by validator
         measurement_method=payload.measurement_method,
-        entry_mode=payload.entry_mode,
+        is_posted=payload.is_posted,
     )
     db.add(entry)
     db.commit()
     db.refresh(entry)
 
-    # Sync tank's current_level with the new closing level
-    tank_crud.update_tank_level(db, payload.tank_id, payload.closing_level)
+    # Sync tank's current_level with the new closing level only if posted
+    if payload.is_posted == 1:
+        tank_crud.update_tank_level(db, payload.tank_id, payload.closing_level)
 
     return entry
 
@@ -78,7 +79,7 @@ def get_entries_by_tank(db: Session, tank_id: str) -> list[LevelEntry]:
 
 def get_tank_snapshots(db: Session) -> list[TankSnapshot]:
     """Return all tanks enriched with current fill percentage and alert flag."""
-    tanks = db.query(Tank).order_by(Tank.tank_id).all()
+    tanks = db.query(Tank).filter(Tank.is_posted == 1).order_by(Tank.tank_id).all()
     snapshots: list[TankSnapshot] = []
     for t in tanks:
         pct = 0.0
@@ -104,7 +105,7 @@ def get_tank_snapshots(db: Session) -> list[TankSnapshot]:
 # ── Update ────────────────────────────────────────────────────────────────────
 
 def update_level_entry(db: Session, entry: LevelEntry, payload: LevelEntryUpdate) -> LevelEntry:
-    if entry.entry_mode == "post":
+    if entry.is_posted == 1:
         raise ValueError("Cannot edit a posted (locked) level entry.")
 
     update_data = payload.model_dump(exclude_unset=True)
@@ -117,16 +118,21 @@ def update_level_entry(db: Session, entry: LevelEntry, payload: LevelEntryUpdate
     db.commit()
     db.refresh(entry)
 
-    # Sync tank level
-    tank_crud.update_tank_level(db, entry.tank_id, entry.closing_level)
+    # Sync tank level only if it is now posted
+    if entry.is_posted == 1:
+        tank_crud.update_tank_level(db, entry.tank_id, entry.closing_level)
 
     return entry
 
 
 def post_level_entry(db: Session, entry: LevelEntry) -> LevelEntry:
-    if entry.entry_mode == "post":
+    if entry.is_posted == 1:
         raise ValueError("Level entry is already posted.")
-    entry.entry_mode = "post"
+    entry.is_posted = 1
     db.commit()
     db.refresh(entry)
+    
+    # Sync tank level when explicitly posted
+    tank_crud.update_tank_level(db, entry.tank_id, entry.closing_level)
+    
     return entry

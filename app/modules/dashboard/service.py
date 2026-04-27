@@ -96,7 +96,7 @@ def build_dashboard(db: Session, activity_limit: int = 10) -> DashboardOut:
                 detail=f"{p.gas_type} — {p.quantity_display or f'{p.quantity} {p.quantity_unit}'}",
                 tank=p.linked_tank_id,
                 time=_human_time(p.date),
-                status="Posted" if p.entry_mode == "post" else "Draft",
+                status="Posted" if p.is_posted == 1 else "Saved",
                 reference_id=p.production_id,
             )
         )
@@ -115,7 +115,7 @@ def build_dashboard(db: Session, activity_limit: int = 10) -> DashboardOut:
                 detail=f"Closing: {e.closing_level} L",
                 tank=e.tank_id,
                 time=_human_time(e.date),
-                status="Posted" if e.entry_mode == "post" else "Draft",
+                status="Posted" if e.is_posted == 1 else "Saved",
                 reference_id=e.entry_id,
             )
         )

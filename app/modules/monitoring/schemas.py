@@ -24,7 +24,7 @@ class LevelEntryCreate(BaseModel):
     quantity_added: float = Field(default=0.0, ge=0, description="Gas added to tank")
     quantity_issued: float = Field(default=0.0, ge=0, description="Gas dispensed from tank")
     measurement_method: str = Field(default="Manual Dip")
-    entry_mode: Literal["draft", "post"] = Field(default="draft")
+    is_posted: int = Field(default=0)
 
     # closing_level is computed server-side; client may send it for verification
     closing_level: Optional[float] = Field(
@@ -46,7 +46,7 @@ class LevelEntryUpdate(BaseModel):
     quantity_added: Optional[float] = Field(default=None, ge=0)
     quantity_issued: Optional[float] = Field(default=None, ge=0)
     measurement_method: Optional[str] = None
-    entry_mode: Optional[Literal["draft", "post"]] = None
+    is_posted: Optional[int] = None
 
 
 # ── Response schema ───────────────────────────────────────────────────────────
@@ -60,7 +60,7 @@ class LevelEntryOut(BaseModel):
     quantity_issued: float
     closing_level: float
     measurement_method: str
-    entry_mode: str
+    is_posted: int
 
     model_config = {"from_attributes": True}
 

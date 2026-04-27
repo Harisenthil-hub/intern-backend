@@ -58,8 +58,8 @@ def get_tank(tank_id: str, db: Session = Depends(get_db)) -> TankOut:
     summary="Create a new tank",
     description=(
         "Creates a new tank record. "
-        "Set `entry_mode='draft'` to save for later editing, "
-        "or `entry_mode='post'` to finalise immediately."
+        "Set `is_posted=0` to save for later editing, "
+        "or `is_posted=1` to finalise immediately."
     ),
 )
 def create_tank(payload: TankCreate, db: Session = Depends(get_db)) -> TankOut:

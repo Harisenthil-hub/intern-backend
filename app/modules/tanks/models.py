@@ -6,7 +6,7 @@ Columns mirror the fields collected in AddTankPage.jsx:
   minLevel, maxLevel, calibrationRef, status, entryMode
 """
 
-from sqlalchemy import Column, String, Float, Enum as SAEnum
+from sqlalchemy import Column, String, Float, Enum as SAEnum, Integer
 import enum
 
 from app.database.database import Base
@@ -17,10 +17,6 @@ class TankStatus(str, enum.Enum):
     inactive = "Inactive"
     maintenance = "Maintenance"
 
-
-class TankEntryMode(str, enum.Enum):
-    draft = "draft"
-    posted = "post"
 
 
 class Tank(Base):
@@ -51,11 +47,7 @@ class Tank(Base):
         nullable=False,
         default=TankStatus.active.value,
     )
-    entry_mode = Column(
-        SAEnum(TankEntryMode, values_callable=lambda x: [e.value for e in x]),
-        nullable=False,
-        default=TankEntryMode.draft.value,
-    )
+    is_posted = Column(Integer, nullable=False, default=0)
 
     # Current stock level (updated by monitoring entries)
     current_level = Column(Float, nullable=True, default=0.0)

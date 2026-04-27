@@ -6,15 +6,11 @@ Columns mirror the AddLevelEntryPage.jsx form:
   quantityIssued, closingLevel (auto-calculated), measurementMethod, entryMode
 """
 
-from sqlalchemy import Column, String, Float, Date, ForeignKey, Enum as SAEnum
+from sqlalchemy import Column, String, Float, Date, ForeignKey, Enum as SAEnum, Integer
 import enum
 
 from app.database.database import Base
 
-
-class MonitoringEntryMode(str, enum.Enum):
-    draft = "draft"
-    posted = "post"
 
 
 class MeasurementMethod(str, enum.Enum):
@@ -52,8 +48,4 @@ class LevelEntry(Base):
     )
 
     # Workflow
-    entry_mode = Column(
-        SAEnum(MonitoringEntryMode, values_callable=lambda x: [e.value for e in x]),
-        nullable=False,
-        default=MonitoringEntryMode.draft.value,
-    )
+    is_posted = Column(Integer, nullable=False, default=0)

@@ -30,7 +30,7 @@ class DashboardStats(BaseModel):
 # ── Activity item ─────────────────────────────────────────────────────────────
 
 ActivityType = Literal["Production", "Level Entry", "Tank Added", "Alert"]
-ActivityStatus = Literal["Posted", "Draft", "Active", "Warning"]
+ActivityStatus = Literal["Posted", "Saved", "Active", "Warning"]
 
 
 class ActivityItem(BaseModel):
