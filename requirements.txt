@@ -1,0 +1,18 @@
+# GasTrack Pro – Python dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.0
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.36
+pymysql==1.1.1          # MySQL driver
+cryptography==43.0.3    # required by PyMySQL for auth
+
+# ── Data validation / settings ────────────────────────────────────────────────
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
