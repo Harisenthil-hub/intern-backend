@@ -19,10 +19,12 @@ class ProcurementStatus(str, enum.Enum):
 
 class InventoryType(str, enum.Enum):
     incoming = "IN"
+    outgoing = "OUT"
 
 
 class ReferenceType(str, enum.Enum):
     procurement = "procurement"
+    issue = "issue"
 
 
 class GasProcurement(Base):
@@ -83,12 +85,7 @@ class InventoryTransaction(Base):
         default=ReferenceType.procurement.value,
     )
 
-    reference_id = Column(
-        Integer,
-        ForeignKey("gas_procurements.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True,
-    )
+    reference_id = Column(Integer, nullable=False, index=True)
 
     quantity = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=func.now())

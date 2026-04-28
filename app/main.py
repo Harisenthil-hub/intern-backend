@@ -17,6 +17,7 @@ from app.modules.production.models import Production         # noqa: F401
 from app.modules.monitoring.models import LevelEntry         # noqa: F401
 from app.modules.lookups.models import Lookup                # noqa: F401
 from app.modules.procurement.models import GasProcurement, InventoryTransaction  # noqa: F401
+from app.modules.issues.models import GasIssue              # noqa: F401
 
 # ── Import routers ────────────────────────────────────────────────────────────
 from app.modules.tanks.router import router as tanks_router
@@ -25,6 +26,7 @@ from app.modules.monitoring.router import router as monitoring_router
 from app.modules.dashboard.router import router as dashboard_router
 from app.modules.lookups.router import router as lookups_router
 from app.modules.procurement.router import router as procurement_router
+from app.modules.issues.router import router as issues_router
 from app.modules.lookups.crud import seed_lookups_if_empty
 from contextlib import asynccontextmanager
 
@@ -73,6 +75,7 @@ app.include_router(monitoring_router, prefix=API_PREFIX)
 app.include_router(dashboard_router,  prefix=API_PREFIX)
 app.include_router(lookups_router,    prefix=API_PREFIX)
 app.include_router(procurement_router, prefix=API_PREFIX)
+app.include_router(issues_router, prefix=API_PREFIX)
 
 
 # ── Health check ──────────────────────────────────────────────────────────────
