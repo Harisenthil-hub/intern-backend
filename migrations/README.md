@@ -2,6 +2,8 @@ Migration files for the backend
 
 Files:
 - `create_procurement_and_inventory.sql` — creates `gas_procurements` and `inventory_transactions` tables.
+- `update_inventory_and_create_gas_issues.sql` — creates `gas_issues` and makes `inventory_transactions.reference_type` generic.
+- `update_inventory_and_create_loss_records.sql` — creates `loss_records` for loss / leakage monitoring.
 
 How to apply (from the `backend/` folder):
 

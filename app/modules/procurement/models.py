@@ -25,6 +25,7 @@ class InventoryType(str, enum.Enum):
 class ReferenceType(str, enum.Enum):
     procurement = "procurement"
     issue = "issue"
+    loss = "loss"
 
 
 class GasProcurement(Base):
