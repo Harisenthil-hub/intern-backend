@@ -15,6 +15,9 @@ class Settings(BaseSettings):
 
     # ── Database ──────────────────────────────────────────────────
     DATABASE_URL: str
+        # ── Supabase ──────────────────────────────────────────────────
+    SUPABASE_URL: str = ""
+    SUPABASE_KEY: str = ""
 
     # ── CORS ──────────────────────────────────────────────────────
     ALLOWED_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]

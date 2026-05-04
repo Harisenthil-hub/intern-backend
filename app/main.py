@@ -7,7 +7,7 @@ CORS is configured to allow requests from the Vite dev server.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.v1.api import api_router
 from app.core.config import settings
 from app.database.database import Base, engine, SessionLocal
 
@@ -85,7 +85,7 @@ app.include_router(issues_router, prefix=API_PREFIX)
 app.include_router(loss_records_router, prefix=API_PREFIX)
 app.include_router(cylinder_filling_router, prefix=API_PREFIX)
 app.include_router(cylinder_movement_router, prefix=API_PREFIX)
-
+app.include_router(api_router, prefix=API_PREFIX)
 
 # ── Health check ──────────────────────────────────────────────────────────────
 @app.get("/health", tags=["Health"], summary="Health check")
