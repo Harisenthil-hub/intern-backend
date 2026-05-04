@@ -25,3 +25,6 @@ class CylinderFilling(Base):
 
     # Line-item detail stored as JSON blob
     line_items = Column(JSON, nullable=True)
+
+    # 0 = Draft/Saved, 1 = Posted
+    is_posted = Column(Integer, nullable=False, default=0)

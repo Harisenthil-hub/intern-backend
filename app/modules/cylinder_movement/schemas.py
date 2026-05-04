@@ -23,6 +23,7 @@ class CylinderMovementCreate(BaseModel):
     movement_type: str = Field(..., description=f"One of {MOVEMENT_TYPES}")
     cylinders: int = Field(..., ge=1)
     line_items: Optional[List[Any]] = None
+    is_posted: int = 0
 
 
 class CylinderMovementUpdate(BaseModel):
@@ -33,6 +34,7 @@ class CylinderMovementUpdate(BaseModel):
     movement_type: Optional[str] = None
     cylinders: Optional[int] = Field(default=None, ge=1)
     line_items: Optional[List[Any]] = None
+    is_posted: Optional[int] = None
 
 
 # ── Response schema ───────────────────────────────────────────────────────────
@@ -46,5 +48,6 @@ class CylinderMovementOut(BaseModel):
     movement_type: str
     cylinders: int
     line_items: Optional[List[Any]] = None
+    is_posted: int
 
     model_config = {"from_attributes": True}

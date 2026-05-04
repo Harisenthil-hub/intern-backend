@@ -76,4 +76,9 @@ def update_movement(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Cylinder movement entry '{movement_id}' not found.",
         )
+    if entry.is_posted == 1:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot edit a posted record.",
+        )
     return crud.update_movement(db, entry, payload)

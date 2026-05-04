@@ -24,6 +24,7 @@ class CylinderFillingCreate(BaseModel):
     cylinders: int = Field(..., ge=1)
     net_weight: float = Field(..., ge=0)
     line_items: Optional[List[Any]] = None
+    is_posted: int = 0
 
 
 class CylinderFillingUpdate(BaseModel):
@@ -34,6 +35,7 @@ class CylinderFillingUpdate(BaseModel):
     cylinders: Optional[int] = Field(default=None, ge=1)
     net_weight: Optional[float] = Field(default=None, ge=0)
     line_items: Optional[List[Any]] = None
+    is_posted: Optional[int] = None
 
 
 # ── Response schema ───────────────────────────────────────────────────────────
@@ -47,5 +49,6 @@ class CylinderFillingOut(BaseModel):
     cylinders: int
     net_weight: float
     line_items: Optional[List[Any]] = None
+    is_posted: int
 
     model_config = {"from_attributes": True}
